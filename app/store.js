@@ -1,10 +1,14 @@
 const {createStore, applyMiddleware, compose} = Redux;
 const {handleActions} = ReduxActions;
 const {connect: reduxConnect} = ReactRedux;
+const {default: createSagaMiddleware} = ReduxSaga;
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 import api from "./api.js";
+import mainSaga from "./saga.js";
+
+const sagaMiddleware = createSagaMiddleware();
 
 import {
   setApplication,
@@ -37,8 +41,10 @@ const store = createStore(
     },
     defaultState,
   ),
-  composeEnhancers(applyMiddleware(middleware)),
+  composeEnhancers(applyMiddleware(middleware, sagaMiddleware)),
 );
+
+sagaMiddleware.run(mainSaga);
 
 export default store;
 

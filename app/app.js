@@ -1,6 +1,6 @@
 const {Fragment} = React;
 
-import {setApplication} from "./actions.js";
+import {appSelected, appClosed} from "./actions.js";
 import {connect} from "./store.js";
 import ApplicationA from "./applicationA.js";
 
@@ -20,7 +20,7 @@ const App = ({currentApplication, dispatch}) => {
       {CurrentApp ? (
         <Fragment>
           Running application "{currentApplication}"{" "}
-          <button onClick={() => dispatch(setApplication(null))}>Close</button>
+          <button onClick={() => dispatch(appClosed())}>Close</button>
         </Fragment>
       ) : (
         "Please choose the application"
@@ -31,7 +31,7 @@ const App = ({currentApplication, dispatch}) => {
   const dashboard = Object.keys(applications).map(name => (
     <div
       key={name}
-      onClick={() => dispatch(setApplication(name))}
+      onClick={() => dispatch(appSelected(name))}
       style={{
         cursor: "pointer",
         border: "2px solid orange",

@@ -1,6 +1,6 @@
 const {PureComponent, Fragment} = React;
 
-import {setLoggedIn} from "./actions.js";
+import {loggedIn, loggedOut} from "./actions.js";
 import {connect} from "./store.js";
 
 class LoggedInScreen_ extends PureComponent {
@@ -16,7 +16,7 @@ class LoggedInScreen_ extends PureComponent {
           Analytics: <code>{analyticsStatus}</code>
         </div>
         <div>
-          <button onClick={() => dispatch(setLoggedIn(false))}>Log out</button>
+          <button onClick={() => dispatch(loggedOut())}>Log out</button>
         </div>
       </Fragment>
     );
@@ -32,7 +32,7 @@ class ApplicationA extends PureComponent {
     const loggedOutScreen = (
       <Fragment>
         Hello. You are logged out.{" "}
-        <button onClick={() => dispatch(setLoggedIn(true))}>Log in</button>
+        <button onClick={() => dispatch(loggedIn())}>Log in</button>
       </Fragment>
     );
 
