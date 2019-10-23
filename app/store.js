@@ -1,5 +1,6 @@
 const {createStore, applyMiddleware, compose} = Redux;
 const {handleActions} = ReduxActions;
+const {default: thunk} = ReduxThunk;
 const {connect: reduxConnect} = ReactRedux;
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -13,7 +14,19 @@ import {
   setAnalyticsStatus,
 } from "./actions.js";
 
-const middleware = store => next => action => next(action);
+const middleware = store => next => action => {
+  const result = next(action);
+  // const {type, payload} = action;
+  // if (type == setUserData && !!payload) {
+  //   (async () => {
+  //     const {dispatch} = store;
+  //     dispatch(setAnalyticsStatus("sending..."));
+  //     const analyticsResult = await api.sendAnalytics();
+  //     dispatch(setAnalyticsStatus(analyticsResult));
+  //   })();
+  // }
+  return result;
+};
 
 const defaultState = {
   currentApplication: null,
@@ -37,7 +50,7 @@ const store = createStore(
     },
     defaultState,
   ),
-  composeEnhancers(applyMiddleware(middleware)),
+  composeEnhancers(applyMiddleware(thunk, middleware)),
 );
 
 export default store;

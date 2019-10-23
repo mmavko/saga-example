@@ -1,9 +1,43 @@
 const {PureComponent, Fragment} = React;
 
-import {setLoggedIn} from "./actions.js";
+import {setLoggedIn, setUserData, setAnalyticsStatus} from "./actions.js";
 import {connect} from "./store.js";
+import api from "./api.js";
+
+const login = () => dispatch => {
+  dispatch(setLoggedIn(true));
+};
+
+const logout = () => dispatch => {
+  dispatch(setLoggedIn(false));
+  dispatch(setUserData(null));
+  dispatch(setAnalyticsStatus("none"));
+};
 
 class LoggedInScreen_ extends PureComponent {
+  async componentDidMount() {
+    const {dispatch} = this.props;
+    const userData = await api.getUserData();
+    dispatch(setUserData(userData));
+    // dispatch(setAnalyticsStatus("sending..."));
+    // const analyticsResult = await api.sendAnalytics();
+    // dispatch(setAnalyticsStatus(analyticsResult));
+  }
+
+  async componentDidUpdate(prevProps) {
+    const {userData, dispatch} = this.props;
+    if (!prevProps.userData && !!userData) {
+      dispatch(setAnalyticsStatus("sending..."));
+      const analyticsResult = await api.sendAnalytics()
+      dispatch(setAnalyticsStatus(analyticsResult));
+    }
+  }
+
+  componentWillUnmount() {
+    const {dispatch} = this.props;
+    dispatch(logout());
+  }
+
   render() {
     const {userData, analyticsStatus, dispatch} = this.props;
     return (
@@ -16,7 +50,7 @@ class LoggedInScreen_ extends PureComponent {
           Analytics: <code>{analyticsStatus}</code>
         </div>
         <div>
-          <button onClick={() => dispatch(setLoggedIn(false))}>Log out</button>
+          <button onClick={() => dispatch(logout())}>Log out</button>
         </div>
       </Fragment>
     );
@@ -32,7 +66,7 @@ class ApplicationA extends PureComponent {
     const loggedOutScreen = (
       <Fragment>
         Hello. You are logged out.{" "}
-        <button onClick={() => dispatch(setLoggedIn(true))}>Log in</button>
+        <button onClick={() => dispatch(login())}>Log in</button>
       </Fragment>
     );
 
