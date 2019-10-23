@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello Saga</title>
+
+    <script src="./vendor/react.development@16.10.2.js"></script>
+    <script src="./vendor/react-dom.development@16.10.2.js"></script>
+    <script src="./vendor/redux@4.0.4.js"></script>
+    <script src="./vendor/redux-actions@2.6.5.js"></script>
+    <script src="./vendor/react-redux@7.1.1.js"></script>
+
+    <script src="./vendor/babel-standalone@7.6.4.js"></script>
+    <script>
+      Babel.registerPreset("my-preset", {
+        presets: [
+          [Babel.availablePresets["es2017"], {modules: false}],
+          [Babel.availablePresets["react"]],
+        ],
+        plugins: [
+          [Babel.availablePlugins["transform-modules-umd"]],
+        ],
+      });
+    </script>
+
+    <script type="text/babel" data-presets="my-preset" src="./app/api.js"></script>
+    <script type="text/babel" data-presets="my-preset" src="./app/actions.js"></script>
+    <script type="text/babel" data-presets="my-preset" src="./app/store.js"></script>
+    <script type="text/babel" data-presets="my-preset" src="./app/applicationA.js"></script>
+    <script type="text/babel" data-presets="my-preset" src="./app/app.js"></script>
+
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="my-preset">
+      const {Provider} = ReactRedux;
+      import store from "./app/store.js";
+      import App from "./app/app.js";
+
+      ReactDOM.render(
+        <Provider store={store}>
+          <App />
+        </Provider>,
+        document.getElementById("root"),
+      );
+    </script>
+
+  </body>
+</html>
